@@ -7,4 +7,5 @@ public class GlobString
     public const string FIRE1 = "Fire1";
     public const string FIRE2 = "Fire2";
     public const string FIRE3 = "Fire3";
+    public const string Jump = "Jump";
 }

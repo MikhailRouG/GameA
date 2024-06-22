@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 [RequireComponent(typeof(GunRecoil))]
-public class GunShoot : MonoBehaviour
+public class GunShoot : MonoBehaviour , ILeftClick
 {
     [SerializeField] private Transform _bulletStartPos;
     [SerializeField] private float _timeToShoot;
@@ -18,7 +18,7 @@ public class GunShoot : MonoBehaviour
             Debug.DrawRay(_bulletStartPos.position, transform.forward * hit.distance, Color.red);
         }
     }
-    public void Shoot()
+    public void LeftClick()
     {
         if ((Time.time - _currentShootTime) < _timeToShoot) return;
         _currentShootTime = Time.time;

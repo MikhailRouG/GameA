@@ -1,24 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float _speedForward;
-    [SerializeField] private float _speedRight;
-    [SerializeField] private float _sprintSpeed;
     private Rigidbody _rigidbody;
-    private Animator _animator;
-    void Start()
+    [SerializeField] private float _speedForward;
+    [SerializeField] private float _height;
+    private float _gravity;
+    private Vector3 _position;
+    [SerializeField] private Transform _groundCheck;
+    [SerializeField] private LayerMask _layerMask;
+    private bool _isGround = true;
+    private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _animator = GetComponentInChildren<Animator>();
     }
 
-    public void Move(Vector3 velocity, bool sprint)
+    public void Move(float horizontal,float vertical, bool sprint)
     {
-        Vector3 direction = transform.right * velocity.x * _speedRight + transform.forward * velocity.z * _speedForward;
-        if (sprint) _rigidbody.velocity = direction * _sprintSpeed * Time.deltaTime;
-        else _rigidbody.velocity = direction * Time.deltaTime;
+        _isGround = Physics.CheckSphere(_groundCheck.position, 0.5f, _layerMask);
+        if (!_isGround) 
+        {
+            _rigidbody.velocity += new Vector3(0f, _gravity * Time.deltaTime, 0f);
+            return;
+        }
+        Vector3 offset = (horizontal * transform.right + vertical * transform.forward) * (_speedForward* Time.deltaTime);
+        _rigidbody.MovePosition(_rigidbody.position + offset);
+    }
+
+    public void Jump()
+    {
+        if (!_isGround) return;
+        _rigidbody.AddForce(transform.up * _height, ForceMode.Impulse);
+        _isGround = false;
     }
 }
